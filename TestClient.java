@@ -1,23 +1,17 @@
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.*;
-import java.io.*;
-import java.util.Scanner;
 
 public class TestClient {
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        Socket socket = new Socket("localhost", 5000);
-
-        BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-
-        while (true) {
-            System.out.print("Enter message: ");
-            String message = scanner.nextLine();
-
-            output.println(message);
-
-            String response = input.readLine();
-            System.out.println("Server response: " + response);
-        }
+        DatagramSocket datagramSocket = new DatagramSocket(1234, InetAddress.getByName("localhost"));
+        System.out.println(InetAddress.getLocalHost());
+        System.out.println(datagramSocket.getLocalAddress());
+        byte[] buffer = new byte[10];
+        DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
+        datagramSocket.receive(datagramPacket);
+        String data = new String(datagramPacket.getData());
+        System.out.println(data);
     }
 }
