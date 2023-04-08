@@ -40,14 +40,17 @@ class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
 
-                            File certFile = new File("/home/manas/server.crt");
-                            File keyFile = new File("/home/manas/server.key");
-                            X509Certificate serverCert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(certFile));
-                            PrivateKey serverKey = (PrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Files.readAllBytes(keyFile.toPath())));
+//                            File certFile = new File("/home/manas/server.crt");
+//                            File keyFile = new File("/home/manas/server.key");
+//                            X509Certificate serverCert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(certFile));
+//                            PrivateKey serverKey = (PrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Files.readAllBytes(keyFile.toPath())));
+//
+//                            SslContext sslCtx = SslContextBuilder.forServer(serverKey, serverCert).build(); // create SSL context for server
+//                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc())); // add SSL handler to pipeline
 
-                            SslContext sslCtx = SslContextBuilder.forServer(serverKey, serverCert).build(); // create SSL context for server
-                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc())); // add SSL handler to pipeline
+                            final SslContext sslCtx = SslContextBuilder.forServer(new File("/home/manas/server.crt"), new File("/home/manas/server.key")).build(); // Replace with your own server.crt and server.key file paths
 
+                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
                             ch.pipeline().addLast(new ServerHandler());
                         }
                     })

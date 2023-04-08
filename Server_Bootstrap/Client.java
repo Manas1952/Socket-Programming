@@ -47,16 +47,19 @@ public class Client {
 
 
 
-                            File certFile = new File("/home/manas/server.crt");
-                            File keyFile = new File("/home/manas/server.key");
-                            X509Certificate clientCert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(certFile));
-                            PrivateKey clientKey = (PrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Files.readAllBytes(keyFile.toPath())));
+//                            File certFile = new File("/home/manas/server.crt");
+//                            File keyFile = new File("/home/manas/server.key");
+//                            X509Certificate clientCert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(certFile));
+//                            PrivateKey clientKey = (PrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Files.readAllBytes(keyFile.toPath())));
+//
+//// Create an SSL context for the client
+//                            SslContext sslCtx = SslContextBuilder.forClient()
+//                                    .keyManager(clientKey, clientCert)
+//                                    .trustManager(InsecureTrustManagerFactory.INSTANCE)
+//                                    .build();
 
-// Create an SSL context for the client
-                            SslContext sslCtx = SslContextBuilder.forClient()
-                                    .keyManager(clientKey, clientCert)
-                                    .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                                    .build();
+                            final SslContext sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build(); // Use your own TrustManagerFactory here
+
                             ch.pipeline().addLast(sslCtx.newHandler(ch.alloc(), host, port));
                             ch.pipeline().addLast(new ClientHandler());
                         }
